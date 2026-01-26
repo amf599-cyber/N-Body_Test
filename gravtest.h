@@ -18,7 +18,7 @@
 const int NUM_ITERATIONS = 100000;
 
 // Softening parameter - Half-distance at which forces are softened between two particles
-const double dih = 0.05;
+const double dih = 0.005;
 
 // Time step per iteration - small value for accurate integration
 // Total simulation time = NUM_ITERATIONS * dt
