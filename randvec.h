@@ -65,9 +65,6 @@ public:
           distribution(COORD_MIN, COORD_MAX) {
     }
     
-    ~RandomVector() {
-    }
-
     /**
      * Generate a population of particles with uniform mass
      * @param n Number of particles to generate (default: NUM_PARTICLES)

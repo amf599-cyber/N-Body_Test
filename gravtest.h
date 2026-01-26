@@ -141,6 +141,7 @@ public:
         if (dz > 0.5) dz -= 1.0;
         else if (dz < -0.5) dz += 1.0;
         
+        // Boundary conditions applied, now compute corrected distance
         double r = std::sqrt(dx*dx + dy*dy + dz*dz);
         
         // Calculate force from spline kernel

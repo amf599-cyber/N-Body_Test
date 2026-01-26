@@ -15,21 +15,6 @@
  */
 
 /**
- * Calculate Euclidean distance between two particles
- * @param p1 First particle (the one we're calculating forces on)
- * @param p2 Second particle (source of gravitational force)
- * @return Distance between particles
- */
-
-// Calculate Euclidean distance between two particles in 3D space
-double calculateEuclideanDistance(const Particle& p1, const Particle& p2) {
-    double dx = p1.x - p2.x;
-    double dy = p1.y - p2.y;
-    double dz = p1.z - p2.z;
-    return std::sqrt(dx*dx + dy*dy + dz*dz);
-}
-
-/**
  * Perform one iteration of gravitational force calculation and update particle positions/velocities
  * @param particles Vector of particles to update
  * @param gravityCalculator GravTest instance for calculations
