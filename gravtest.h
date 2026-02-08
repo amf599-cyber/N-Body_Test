@@ -15,32 +15,33 @@
 // Physics Simulation Configuration
 
 // Number of iterations - Configurable value
-const int NUM_ITERATIONS = 100000;
+const int NUM_ITERATIONS = 1;
 
 // Softening parameter - Half-distance at which forces are softened between two particles
-const double dih = 0.005;
+const double dih = 0.05;
 
 // Time step per iteration - small value for accurate integration
 // Total simulation time = NUM_ITERATIONS * dt
-const double dt = 0.0001;
+// Not using time evolution in this version, but defined for future implementation
+// const double dt = 0.0001;
+
+// Setting total simulation run steps for nested loops
 const int t = NUM_ITERATIONS;
 
 class GravTest {
 public:
     GravTest() {
     }
-    
-    std::vector<double> particleAccelerationsX;
-    std::vector<double> particleAccelerationsY;
-    std::vector<double> particleAccelerationsZ;
 
     /**
-     * Write particle acceleration results to a CSV file for Python analysis
+     * Write particle data to a CSV file with specific columns
+     * Output format: delta_x, delta_y, delta_z, acc_x, acc_y, acc_z, pot_x, pot_y, pot_z
      * @param filename Output filename
      * @param iteration Iteration number (for time evolution tracking)
+     * @param particles Reference to the particles vector for position and acceleration data
      */
     
-    void writeResultsToFile(const std::string& filename, int iteration) {
+    void writeResultsToFile(const std::string& filename, int iteration, const std::vector<Particle>& particles) {
         std::ofstream file;
         
         // Open in append mode so we can add iterations sequentially
@@ -53,36 +54,52 @@ public:
         
         // Write header on first iteration
         if (iteration == 0) {
-            file << "iteration,particle_id,accX,accY,accZ,magnitude\n";
+            file << "delta_x,delta_y,delta_z,acc_x,acc_y,acc_z,pot_x,pot_y,pot_z\n";
         }
         
-        // Write acceleration data for each particle
-        for (size_t i = 0; i < particleAccelerationsX.size(); ++i) {
-            double accX = particleAccelerationsX[i];
-            double accY = particleAccelerationsY[i];
-            double accZ = particleAccelerationsZ[i];
-            double magnitude = std::sqrt(accX*accX + accY*accY + accZ*accZ);
+        // Write particle data for each particle
+        for (size_t i = 0; i < particles.size(); ++i) {
+            double dx = particles[i].position.x;
+            double dy = particles[i].position.y;
+            double dz = particles[i].position.z;
+            double accX = particles[i].acceleration.x;
+            double accY = particles[i].acceleration.y;
+            double accZ = particles[i].acceleration.z;
+            double potential = calculatePotential(particles, i);
+            double accMagnitude = particles[i].acceleration.length();
             
-            file << iteration << "," << i << "," 
-                 << accX << "," << accY << "," << accZ << "," 
-                 << magnitude << "\n";
+            // Calculate potential components by decomposing along acceleration direction
+            double potX = 0.0, potY = 0.0, potZ = 0.0;
+            if (accMagnitude > 0.0) {
+                double factor = potential / accMagnitude;
+                potX = factor * accX;
+                potY = factor * accY;
+                potZ = factor * accZ;
+            }
+            
+            file << dx << "," << dy << "," << dz << ","
+                 << accX << "," << accY << "," << accZ << ","
+                 << potX << "," << potY << "," << potZ << "\n";
         }
         
         file.close();
     }
     
     /**
-     * Calculate gravitational spline force based on shared distance r
-     * @param r Distance between particles
+     * Calculate gravitational spline force based on squared distance r²
+     * Optimized to avoid computing square root outside the function
+     * @param r2 Squared distance between particles (r²)
      * @return Force magnitude based on softened spline kernel
      */
 
-    double calculateSplineForce(double r) {     // Based on gravity.h Changa Code
+    double calculateSplineForce(double r2) {     // Based on gravity.h Changa Code
+        double r = std::sqrt(r2);  // Calculate r from r² only once
         double u, a, b, dir;  // Local working variables
+        double dih2 = dih * dih;  // Pre-calculate dih²
 
         // Cases for softened force within 2*softening length
-        if (r < 2.0 * dih) {  
-            u = r/dih;
+        if (r2 < 4.0 * dih2) {  // Equivalent to r < 2*dih squaring each side
+            u = r / dih;
         // Case for softened force within 1*softening length
             if (u < 1.0) {
                 a = (dih*((7.0)/(5.0)) 
@@ -127,41 +144,69 @@ public:
     void calculateAcceleration(const Particle& particle1, const Particle& particle2,
                                double& accX, double& accY, double& accZ) {
         // Calculate displacement vector from particle1 to particle2
-        double dx = particle2.x - particle1.x;
-        double dy = particle2.y - particle1.y;
-        double dz = particle2.z - particle1.z;
+        double dx = particle2.position.x - particle1.position.x;
+        double dy = particle2.position.y - particle1.position.y;
+        double dz = particle2.position.z - particle1.position.z;
+                
+        // Boundary conditions applied, now compute r² and pass to spline
+        double r2 = dx*dx + dy*dy + dz*dz;
         
-        // Apply periodic boundary conditions (wrapping in 1x1x1 domain) minimum image convention
-        if (dx > 0.5) dx -= 1.0;
-        else if (dx < -0.5) dx += 1.0;
-        
-        if (dy > 0.5) dy -= 1.0;
-        else if (dy < -0.5) dy += 1.0;
-        
-        if (dz > 0.5) dz -= 1.0;
-        else if (dz < -0.5) dz += 1.0;
-        
-        // Boundary conditions applied, now compute corrected distance
-        double r = std::sqrt(dx*dx + dy*dy + dz*dz);
-        
-        // Calculate force from spline kernel
-        double force = calculateSplineForce(r);
+        // Calculate force from spline kernel (function handles sqrt internally)
+        double force = calculateSplineForce(r2);
         
         // Gravitational acceleration: a = -m2*b*(r vector)
         // Force is attractive: points from particle2 toward particle1 (negative of displacement)
         // Guard against division by zero (same particle position)
-        if (r > 0.0) {
+        if (r2 > 1e-20) {  // Avoid singularity in acceleration calculation with epsilon threshold
+            double r = std::sqrt(r2);
             double factor = -particle2.mass * force / r;
             accX = factor * dx;
             accY = factor * dy;
             accZ = factor * dz;
         }
+        // Case for zero vector/self-interaction of particles: no acceleration
         else {
             accX = 0.0;
             accY = 0.0;
             accZ = 0.0;
         }
     }
+    
+    /**
+     * Calculate gravitational potential for a particle due to all others
+     * Optimized to use r² for potential vectorization
+     * @param particles Vector of all particles
+     * @param particleIndex Index of the particle to calculate potential for
+     * @return Gravitational potential (scalar) for the particle
+     */
+    double calculatePotential(const std::vector<Particle>& particles, size_t particleIndex) {
+        double potential = 0.0;
+        const Particle& particle1 = particles[particleIndex];
+        
+        for (size_t j = 0; j < particles.size(); ++j) {
+            if (particleIndex != j) {  // Skip self-interaction
+                const Particle& particle2 = particles[j];
+                
+                // Calculate displacement vector
+                double dx = particle2.position.x - particle1.position.x;
+                double dy = particle2.position.y - particle1.position.y;
+                double dz = particle2.position.z - particle1.position.z;
+                
+                // Compute r² (avoid computing r until necessary)
+                double r2 = dx*dx + dy*dy + dz*dz;
+                
+                // Calculate force from spline kernel using r²
+                if (r2 > 1e-20) {  // Avoid singularity in potential calculation with epsilon threshold
+                    double force = calculateSplineForce(r2);
+                    double r = std::sqrt(r2);
+                    // Gravitational potential: φ = -m/r (multiplied by spline kernel b)
+                    // The spline function b is already dimensionless, so we divide by r to get proper potential scaling
+                    potential -= particle2.mass * force / r;
+                }
+            }
+        }
+        
+        return potential;
+    }
 };
-
 #endif // GRAVTEST_H
