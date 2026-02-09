@@ -8,7 +8,7 @@ V1 is the first version of the N-Body Vectorization project I am working on for 
 - Integrated Vector3D template class from Changa project into randvec.h for efficient 3D vector operations
 - Refactored Particle struct to use Vector3D objects (position, velocity, acceleration) instead of individual component doubles
 - Implemented output stream operator for Particle class
-- Streamlined file output to include only positional data (delta_x, delta_y, delta_z) and uniform mass via std:ofstream
+- Streamlined file output to include only components of positional data, acceleration data, potential data, and uniform mass via std:ofstream
 - Commented out periodic and global boundary conditions for future implementation of existing Changa code modules
 - Set NUM_ITERATIONS to 1 for validity and efficiency testing of single iteration of force/potential calculations
 
