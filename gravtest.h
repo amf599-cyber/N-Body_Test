@@ -34,40 +34,6 @@ public:
      * @param particles Reference to the particles vector for position and acceleration data
      */
     
-    void writeResultsToFile(const std::string& filename, int iteration, const std::vector<Particle>& particles) {
-        std::ofstream file;
-        
-        // Open in append mode so we can add iterations sequentially
-        file.open(filename, std::ios::app);
-        
-        if (!file.is_open()) {
-            std::cerr << "Error: Could not open file " << filename << " for writing." << std::endl;
-            return;
-        }
-        
-        // Write header on first iteration
-        if (iteration == 0) {
-            file << "delta_x,delta_y,delta_z,acc_x,acc_y,acc_z,pot_x,pot_y,pot_z\n";
-        }
-        
-        // Write particle data for each particle
-        for (size_t i = 0; i < particles.size(); ++i) {
-            Vector3D<double> pos = particles[i].position;
-            Vector3D<double> acc = particles[i].acceleration;
-            double potential = calculatePotential(particles, i);
-            double accMagnitude = acc.length();
-            
-            // Calculate potential components by decomposing along acceleration direction
-            Vector3D<double> potVec = (accMagnitude > 0.0) ? (acc * (potential / accMagnitude)) : Vector3D<double>();
-            
-            file << pos.x << "," << pos.y << "," << pos.z << ","
-                 << acc.x << "," << acc.y << "," << acc.z << ","
-                 << potVec.x << "," << potVec.y << "," << potVec.z << "\n";
-        }
-        
-        file.close();
-    }
-    
     /**
      * Calculate gravitational spline coefficients a and b
      * Identical to Changa's SPLINE function in gravity.h
