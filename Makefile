@@ -4,8 +4,9 @@ CXXFLAGS = -std=c++17 -Wall -Wextra -O2
 TARGET = v1_app
 
 # Source files
-SOURCES = v1main.cpp
+SOURCES = v1-1main.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
+PRECOMPILED = gravtest.o randvec.o
 
 # Header dependencies
 HEADERS = gravtest.h randvec.h
@@ -14,7 +15,7 @@ HEADERS = gravtest.h randvec.h
 all: $(TARGET)
 
 # Link object files to create executable
-$(TARGET): $(OBJECTS)
+$(TARGET): $(OBJECTS) $(PRECOMPILED)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 # Compile source files to object files
