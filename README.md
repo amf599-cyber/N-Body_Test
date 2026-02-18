@@ -63,7 +63,7 @@ v1/
 ├── Vector3D.h      # Changa vector operations code
 ├── TypeSelection.h # Changa code required due to Vector3D.h include
 ├── Makefile        # Build configuration
-├── v1main.cpp      # Main source file
+├── v1-2main.cpp      # Main source file
 └── README.md       # This file
 ```
 

@@ -31,9 +31,9 @@ double calculatePotentialBetweenPair(const Particle& particle1, const Particle& 
         double r = std::sqrt(r2);
         double a, b;
         gravityCalculator.calculateSplineForce(r2, a, b);
-        // Gravitational potential: φ = -m*a/r
+        // Gravitational potential: φ = -m*a
         // a is the potential coefficient from the spline kernel
-        return -particle2.mass * a / r;
+        return -particle2.mass * a;
     }
     return 0.0;
 }
@@ -83,6 +83,13 @@ int main() {
         // Write header
         csvFile << "distance,acc_magnitude,pot_magnitude\n";
         
+        // void partForce(Particle *part, std::vector<Particles> &particles){}
+        // Particles operating on, the vector of all particles
+        // *part replaces particles[0] line 92 except inside function
+        // updates acceleration in the Particle struct, add softening to same class
+        // Initialize softening, and use in calculation of 2h
+        // vectorize lines 93-103 from v1main (SIMD)
+
         // Test particle pair interactions including self-interaction case
         for (size_t j = 0; j < particles.size(); ++j) {
             // Calculate displacement and acceleration

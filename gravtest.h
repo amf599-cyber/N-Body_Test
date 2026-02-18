@@ -23,8 +23,7 @@ const double dih = 0.05;
 
 class GravTest {
 public:
-    GravTest() {
-    }
+
     /**
      * Calculate gravitational spline coefficients a and b
      * Identical to Changa's SPLINE function in gravity.h
@@ -36,7 +35,7 @@ public:
 
     void calculateSplineForce(double r2, double& a, double& b) {
         double r, u, dir;
-        double twoh = dih;  // dih is the softening length (half-distance)
+        double twoh = 2*dih;  // dih is the softening length (half-distance)
         
         r = std::sqrt(r2);
 
@@ -88,7 +87,7 @@ public:
             double r = std::sqrt(r2);
             double a, b;
             calculateSplineForce(r2, a, b);
-            Vector3D<double> acc = displacement * (-particle2.mass * b / r);
+            Vector3D<double> acc = displacement * (-particle2.mass * b);
             accX = acc.x;
             accY = acc.y;
             accZ = acc.z;
@@ -120,7 +119,7 @@ public:
                     double a, b;
                     calculateSplineForce(r2, a, b);
                     double r = std::sqrt(r2);
-                    potential -= particle2.mass * a / r;
+                    potential -= particle2.mass * a;
                 }
             }
         }
