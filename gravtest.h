@@ -25,15 +25,6 @@ class GravTest {
 public:
     GravTest() {
     }
-
-    /**
-     * Write particle data to a CSV file with specific columns
-     * Output format: delta_x, delta_y, delta_z, acc_x, acc_y, acc_z, pot_x, pot_y, pot_z
-     * @param filename Output filename
-     * @param iteration Iteration number (for time evolution tracking)
-     * @param particles Reference to the particles vector for position and acceleration data
-     */
-    
     /**
      * Calculate gravitational spline coefficients a and b
      * Identical to Changa's SPLINE function in gravity.h
