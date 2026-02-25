@@ -18,8 +18,7 @@ const int NUM_PARTICLES = 1000000;
 const double UNIFORM_MASS = 1.0;
 const double COORD_MIN = 0.0;
 const double COORD_MAX = 1.0;
-const double INIT_VELOCITY = 0.0;
-const double INIT_ACCELERATION = 0.0;
+const double dih = 0.05;  // Softening parameter - Half-distance at which forces are softened
 
 /**
  * @struct Particle
@@ -31,28 +30,12 @@ struct Particle {
     Vector3D<double> velocity;   // Velocity in 3D (initially 0)
     Vector3D<double> acceleration;  // Acceleration in 3D
     double mass;                 // Particle mass (uniform = 1.0)
+    double potential;            // Gravitational potential energy
+    double softening;            // Softening length for force calculations
     
     // Constructor
     Particle() 
-        : position(0.0), velocity(0.0), acceleration(0.0), mass(UNIFORM_MASS) {}
-    
-    /**
-     * Calculate displacement from this particle to another
-     * @param other The other particle
-     * @return Displacement vector
-     */
-    Vector3D<double> displacementTo(const Particle& other) const {
-        return other.position - position;
-    }
-    
-    /**
-     * Output stream operator for file output
-     * Outputs: particle_id, delta_x, delta_y, delta_z, mass
-     */
-    friend std::ostream& operator<<(std::ostream& os, const Particle& p) {
-        os << p.position.x << "," << p.position.y << "," << p.position.z << "," << p.mass;
-        return os;
-    }
+        : position(0.0), velocity(0.0), acceleration(0.0), mass(UNIFORM_MASS), potential(0.0), softening(dih) {}
 };
 
 class RandomVector {

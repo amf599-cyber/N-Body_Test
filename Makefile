@@ -4,7 +4,7 @@ CXXFLAGS = -std=c++17 -Wall -Wextra -O2
 TARGET = v1_app
 
 # Source files
-SOURCES = v1-2main.cpp
+SOURCES = v1-3main.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 PRECOMPILED = gravtest.o randvec.o
 

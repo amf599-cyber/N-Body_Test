@@ -4,6 +4,16 @@ Alex Feucht University of Washington Comprehensive Physics and Astronomy Undergr
 ## Overview
 V1 is the first version of the N-Body Vectorization project I am working on for Professor Quinn. This project utilizes some existing code from the Changa Project, namely gravity.h and vector3D.h. This is the first attempt at implementing a better vectorization solution to these coding modules using updated versions of the C++ Standard Template Library. All unaltered and repurposed code remains attributed to original authors.
 
+## Using partBucketForce code for inner loop (v1.3)
+- Removed existing inner for loop from main in exchange for an additional method, partBucketForce from gravity.h
+- Added additional CSV helper method for more efficient and less redundant output to file inside partBucketForce
+- Significantly cleaned up redundant code blocks and made sure all of the main methods were being used primarily
+- Validated that the same analytic outputs were achieved for both potential and acceleration vs. separation distance
+- in Python plots in the greater than 2 * dih range, with softening occuring at separations below this
+- Cleaned up variable definitions and access between blocks of code and includes
+- Added more descriptive variable names in some cases where it could add clarity
+- Overall formatting for readability and ease of following code structure
+
 ## Particle Pair Interactions only (v1.2)
 - Testing individual particle pair interactions between first particle and all others, including self-interaction case
 - Removed epsilon threshold when passing to gravtest.h, including radius of 0 or greater (up to max separation distance)
