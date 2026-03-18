@@ -3,14 +3,14 @@
 # Pure SIMD pipeline: Generation → SoA Processing → CSV Output
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -O2 -march=native
-TARGET = v1_app
+TARGET = vf_app
 
 # Source files
-SOURCES = v1-3main.cpp
+SOURCES = v-fmain.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 
 # Header dependencies
-HEADERS = gravtest.h randvec.h TypeSelection.h Vector3D.h
+HEADERS = gravtest-f.h randvec-f.h TypeSelection.h Vector3D.h
 
 # Default target
 all: $(TARGET)
