@@ -113,7 +113,7 @@ Based on the observed linear scaling behavior, we can project SIMD benefits for 
 **Key Proven Benefits:**
 1. **Memory Efficiency:** Consistent 11-28% fewer cache references across all scales (Structure of Arrays optimization)
 2. **Production-Scale Speedup:** 1.395x speed verified at 256M particles with superior IPC (2.648 vs. 2.635)
-3. **Predictable Scaling:** Linear ~3-4% improvement per 2x increase in problem size
+3. **Predictable Scaling:** Linear ~15-16% improvement per 2x increase in problem size
 4. **Clear Crossover:** SIMD advantage becomes decisive at 10-15M particles and grows beyond
 5. **CPU-Level Optimization:** IPC inversion proves vector parallelism is fully utilized at scale
 6. **Branch Performance:** Excellent prediction in both versions through implicit SIMD masking (0.17% miss rate)
