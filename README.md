@@ -79,7 +79,7 @@ To understand real-world performance scaling, the SIMD implementation was tested
 256M particles:  1.395x speedup (nearing limits of system memory on my PC)
 512M particles and beyond: cause VS Code to crash and/or Linux avoids a system memory failure
 
-Pattern: ~3-4% speedup improvement per 2x scale increase
+Pattern: ~15-16% speedup improvement per 2x scale increase
 ```
 
 **Key Insight — IPC Inversion at Scale:**
