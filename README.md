@@ -37,7 +37,7 @@ V1 is the first version of the N-Body Vectorization project I am working on for 
 
 #### Multi-Scale Benchmarking Results
 
-To understand real-world performance scaling, the SIMD implementation was tested at three progressively larger scales. All testing is done on the isolated partBucketForce inner loop method. This reveals exactly how SIMD benefits grow with problem size:
+To understand real-world performance scaling, the SIMD implementation was tested at four progressively larger scales. All testing is done on the isolated partBucketForce inner loop method. This reveals exactly how SIMD benefits grow with problem size:
 
 ##### Scale 1: Small (1M Particles, 2^20)
 | Metric | SIMD | Scalar | Winner |
@@ -238,12 +238,12 @@ make clean
 ## Project Structure
 ```
 v1/
-├── gravtest.h      # Gravitational force testing interface
-├── randvec.h       # Random vector generation interface
+├── gravtest-f.h      # Gravitational force testing interface
+├── randvec-f.h       # Random vector generation interface
 ├── Vector3D.h      # Changa vector operations code
 ├── TypeSelection.h # Changa code required due to Vector3D.h include
 ├── Makefile        # Build configuration
-├── v1-3main.cpp    # Main source file
+├── v-fmain.cpp    # Main source file
 └── README.md       # This file
 ```
 
