@@ -95,10 +95,10 @@ Based on the observed linear scaling behavior, we can project SIMD benefits for 
 | Medium | 67M (2^26) | **1.044x** | Clear SIMD advantage emerges |
 | Large | 128M (2^27) | **1.203x** | Tested & verified |
 | Very Large | 256M (2^28) | **1.395x** | Tested & verified |
-| Extreme | 512M (2^29) | ~1.28x | Extrapolated (memory limits prevent testing) |
-| Massive | 1B (2^30) | ~1.31x | Extrapolated (memory limits prevent testing) |
+| Extreme | 512M (2^29) | ~1.618x | Extrapolated (memory limits prevent testing) |
+| Massive | 1B (2^30) | ~1.877x | Extrapolated (memory limits prevent testing) |
 
-**Note:** Extrapolations maintain the ~3-4% improvement per 2x scale observed across all tested scales.
+**Note:** Extrapolations maintain the ~15-16% improvement per 2x scale observed across all tested scales.
 
 #### Performance Trade-off Analysis
 
